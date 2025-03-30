@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $token = $user->createToken('YourAppName')->plainTextToken;
+            $token = $user->createToken('MovieApp')->plainTextToken;
 
             return response()->json([
                 'message' => 'Logged in successfully!',
