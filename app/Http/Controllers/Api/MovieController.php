@@ -13,13 +13,16 @@ class MovieController extends Controller
     {
         // Get all movies
         // $movies = Movie::with('user:id,name')->orderBy('created_at', 'desc')->get(); // Fetch movies with user info
-
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
         // Get the authenticated user's movies
         $movies = Movie::where('user_id', Auth::id()) // Filter movies by authenticated user's ID
-        ->with('user:id,name') // Optionally, include user info
-        ->orderBy('created_at', 'desc') // Order movies by creation date
-        // ->get() to get all movies
-        ->paginate(); // this will get at most 15 movies per page
+            ->with('user:id,name') // Optionally, include user info
+            ->orderBy('created_at', 'desc') // Order movies by creation date
+            // ->get() to get all movies
+            ->paginate(); // this will get at most 15 movies per page
 
 
         return response()->json($movies);
@@ -28,6 +31,11 @@ class MovieController extends Controller
     // Store a new movie
     public function store(Request $request)
     {
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'openingText' => 'required|string',
@@ -54,6 +62,11 @@ class MovieController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
+
         // Ensure the note belongs to the authenticated user
         // if ($movie->user_id !== Auth::id()) {
         //     abort(403); // Forbidden response
@@ -67,6 +80,11 @@ class MovieController extends Controller
     {
         if ($movie->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
         }
 
         // Ensure the note belongs to the authenticated user
@@ -91,6 +109,11 @@ class MovieController extends Controller
     {
         if ($movie->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
         }
 
         $movie->delete();

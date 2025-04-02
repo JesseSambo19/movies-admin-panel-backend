@@ -12,7 +12,11 @@ class ProfileController extends Controller
     // Profile Information
     public function getProfile(Request $request)
     {
-        $user = Auth::user();
+
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
 
         return response()->json([
             'name' => $user->name,
@@ -22,7 +26,10 @@ class ProfileController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user = Auth::user();
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -39,7 +46,10 @@ class ProfileController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $user = Auth::user();
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
 
         $request->validate([
             'current_password' => 'required|string',
@@ -61,7 +71,10 @@ class ProfileController extends Controller
 
     public function deleteAccount()
     {
-        $user = Auth::user();
+        $user = Auth::user(); // Get the authenticated user
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
 
         // Revoke all tokens (logs out user)
         $user->tokens()->delete();

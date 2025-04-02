@@ -46,9 +46,10 @@ class AuthController extends Controller
         ]);
 
         // Fire the Registered event to send the verification email
-        event(new Registered($user));
+        // event(new Registered($user));
 
-        return response()->json(['message' => 'User registered successfully. Please check your email for verification.'], 201);
+        // return response()->json(['message' => 'User registered successfully. Please check your email for verification.'], 201);
+        return response()->json(['message' => 'User registered successfully.'], 201);
     }
 
     public function verifyEmail(Request $request)
@@ -96,11 +97,18 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
             $token = $user->createToken('MovieApp')->plainTextToken;
+            $verified = 0;
+            // it will check if the email is verified after generating the login token
+            if ($user->hasVerifiedEmail()) {
+                $verified = 1;
+            }
 
             return response()->json([
                 'message' => 'Logged in successfully!',
                 'token' => $token,
                 'user' => $user, // Return user info (e.g., name)
+                'verified' => $verified,
+                'logged_in' => 1,
             ]);
         }
 
