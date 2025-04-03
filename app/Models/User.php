@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendOtpMail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -22,6 +24,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'otp',
+        'otp_expires_at'
     ];
 
     /**
@@ -45,5 +49,15 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function generateOtp()
+    {
+        $otp = rand(100000, 999999);
+        $this->otp = $otp;
+        $this->otp_expires_at = now()->addMinutes(10); // OTP valid for 10 minutes
+        $this->save();
+
+        Mail::to($this->email)->send(new SendOtpMail($otp));
     }
 }
