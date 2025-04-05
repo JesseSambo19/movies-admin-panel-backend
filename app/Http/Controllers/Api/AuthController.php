@@ -58,7 +58,7 @@ class AuthController extends Controller
         $user = User::find($request->route('id'));
 
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'User not found'], 400);
         }
 
         if ($user->hasVerifiedEmail()) {
@@ -113,7 +113,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Invalid credentials'], 401);
+        return response()->json(['message' => 'Invalid credentials'], 400);
     }
 
     // OTP
@@ -126,7 +126,7 @@ class AuthController extends Controller
         }
 
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'User not found'], 400);
         }
         $user->generateOtp();
 
@@ -142,7 +142,7 @@ class AuthController extends Controller
         }
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['error' => 'User not found'], 400);
         }
 
         if (!$user || $user->otp !== $request->otp) {
@@ -178,7 +178,7 @@ class AuthController extends Controller
         if ($user) {
             return response()->json(['isAuthenticated' => true]);
         } else {
-            return response()->json(['isAuthenticated' => false], 401);
+            return response()->json(['isAuthenticated' => false], 400);
         }
     }
 
