@@ -21,6 +21,8 @@ class Kernel extends HttpKernel
         \Illuminate\Http\Middleware\ValidatePostSize::class,
         \Illuminate\Http\Middleware\TrimStrings::class,
         \Illuminate\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\Cors::class, // cors fix that I believe would also work
+        // \Fruitcake\Cors\HandleCors::class, // laravel fix that I believe would also work
     ];
 
     /**
@@ -39,8 +41,8 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            \Fruitcake\Cors\HandleCors::class, // added this line for cors support
-            \App\Http\Middleware\CorsMiddleware::class, //a middleware to manually set CORS headers.
+            // \Fruitcake\Cors\HandleCors::class, // added this line for cors support
+            // \App\Http\Middleware\CorsMiddleware::class, //a middleware to manually set CORS headers.
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],

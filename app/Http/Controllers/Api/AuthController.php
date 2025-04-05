@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\PasswordController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password; // For password reset functionality
+// use Illuminate\Support\Facades\Password; // For password reset functionality
 // use Illuminate\Support\Facades\Log;
 // use Illuminate\Auth\Events\Registered;
 // use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -96,7 +97,7 @@ class AuthController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $token = $user->createToken('MovieApp')->plainTextToken;
+            $token = $user->createToken('Movies')->plainTextToken;
             $verified = false;
             // it will check if the email is verified after generating the login token
             if ($user->hasVerifiedEmail()) {
@@ -127,7 +128,6 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
-
         $user->generateOtp();
 
         return response()->json(['message' => 'OTP sent successfully!']);
@@ -182,24 +182,22 @@ class AuthController extends Controller
         }
     }
 
-    // Forgot Password (Send Reset Link)
+    // custom function send password reset link
     public function forgotPassword(Request $request)
     {
         // Validate the email
         $request->validate(['email' => 'required|email']);
 
-        // Send password reset link
-        $response = Password::sendResetLink($request->only('email'));
+        // Create an instance of PasswordController
+        $passwordController = new PasswordController();
 
-        // Return response based on result
-        if ($response == Password::RESET_LINK_SENT) {
-            return response()->json(['message' => 'Password reset link sent successfully!']);
-        } else {
-            return response()->json(['message' => 'Unable to send password reset link.'], 400);
-        }
+        // Call the reset method and pass the request
+        $response = $passwordController->sendResetLink($request);
+
+        return $response;
     }
 
-    // Reset Password (Update Password)
+    // custom function reset password
     public function resetPassword(Request $request)
     {
         // Validate the required fields
@@ -209,22 +207,59 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Attempt to reset the password
-        $response = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password),
-                ])->save();
-            }
-        );
+        // Create an instance of PasswordController
+        $passwordController = new PasswordController();
 
-        // Return response based on result
-        if ($response == Password::PASSWORD_RESET) {
-            return response()->json(['message' => 'Password reset successfully!']);
-        } else {
-            return response()->json(['message' => 'Failed to reset password.'], 400);
-        }
+        // Call the reset method and pass the request
+        $response = $passwordController->reset($request);
+
+        // Return the response directly (since reset() already returns a response)
+        return $response;
     }
-}
 
+    // Original Forgot Password (Send Reset Link)
+    // public function forgotPassword(Request $request)
+    // {
+    //     // Validate the email
+    //     $request->validate(['email' => 'required|email']);
+
+    //     // Send password reset link
+    //     $response = Password::sendResetLink($request->only('email'));
+
+    //     // Return response based on result
+    //     if ($response == Password::RESET_LINK_SENT) {
+    //         return response()->json(['message' => 'Password reset link sent successfully!']);
+    //     } else {
+    //         return response()->json(['message' => 'Unable to send password reset link.'], 400);
+    //     }
+    // }
+
+
+    // Original Reset Password (Update Password)
+    // public function resetPassword(Request $request)
+    // {
+    //     // Validate the required fields
+    //     $request->validate([
+    //         'token' => 'required|string',
+    //         'email' => 'required|email',
+    //         'password' => 'required|string|min:8|confirmed',
+    //     ]);
+
+    //     // Attempt to reset the password
+    //     $response = Password::reset(
+    //         $request->only('email', 'password', 'password_confirmation', 'token'),
+    //         function ($user, $password) {
+    //             $user->forceFill([
+    //                 'password' => Hash::make($password),
+    //             ])->save();
+    //         }
+    //     );
+
+    //     // Return response based on result
+    //     if ($response == Password::PASSWORD_RESET) {
+    //         return response()->json(['message' => 'Password reset successfully!']);
+    //     } else {
+    //         return response()->json(['message' => 'Failed to reset password.'], 400);
+    //     }
+    // }
+}

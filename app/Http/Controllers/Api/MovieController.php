@@ -22,7 +22,7 @@ class MovieController extends Controller
             ->with('user:id,name') // Optionally, include user info
             ->orderBy('created_at', 'desc') // Order movies by creation date
             // ->get() to get all movies
-            ->paginate(); // this will get at most 15 movies per page
+            ->paginate(); // this will get at most 15 movies per page by default
 
 
         return response()->json($movies);
