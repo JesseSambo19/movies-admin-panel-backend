@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 
 // the / now is dashboard
 // whener the code tries to redirect to /dashboard it will redirect to / then to /dashboard
-Route::redirect('/','/note')->name('dashboard');
+Route::redirect('/', '/note')->name('dashboard');
 
 
-Route::middleware(['auth', 'verified'])->group(function() {
-// associate name on every route
+Route::middleware(['auth', 'verified'])->group(function () {
+    // associate name on every route
 // Route::get('/note', [NoteController::class,'index'])->name('note.index');
 // Route::get('/note/create', [NoteController::class,'create'])->name('note.create');
 // Route::post('/note', [NoteController::class,'store'])->name('note.store');
@@ -27,8 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function() {
 // Route::put('/note/{id}', [NoteController::class,'update'])->name('note.update');
 // Route::delete('/note/{id}', [NoteController::class,'destroy'])->name('note.destroy');
 
-// this single line will generate all of the routes declared above
-Route::resource('note', NoteController::class);
+    // this single line will generate all of the routes declared above
+    Route::resource('note', NoteController::class);
 });
 
 Route::middleware('auth')->group(function () {
@@ -37,4 +37,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::get('/debug-db', function () {
+    try {
+        // Check DB connection
+        DB::connection()->getPdo();
+        $dbName = DB::connection()->getDatabaseName();
+
+        // Run migrations
+        Artisan::call('migrate', ['--force' => true]);
+
+        return "✅ Connected to DB: {$dbName}<br>✅ Migrations ran successfully.";
+    } catch (\Exception $e) {
+        return "❌ DB connection failed:<br><pre>" . $e->getMessage() . "</pre>";
+    }
+});
+
+require __DIR__ . '/auth.php';
