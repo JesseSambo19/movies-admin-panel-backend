@@ -3,6 +3,7 @@
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -60,6 +61,23 @@ Route::get('/debug', function () {
         'session_driver' => config('session.driver'),
         'storage_is_writable' => is_writable(storage_path()),
     ]);
+});
+
+Route::get('/check-login', function () {
+    if (view()->exists('auth.login')) {
+        return 'Login view exists!';
+    }
+    return 'Login view is missing!';
+});
+
+
+Route::get('/test-error', function () {
+    try {
+        return view('auth.login');
+    } catch (\Exception $e) {
+        Log::error('Login view error: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()]);
+    }
 });
 
 
