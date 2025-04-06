@@ -52,4 +52,15 @@ Route::get('/debug-db', function () {
     }
 });
 
+// In routes/web.php
+Route::get('/debug', function () {
+    return response()->json([
+        'env' => app()->environment(),
+        'db_connection' => DB::connection()->getDatabaseName(),
+        'session_driver' => config('session.driver'),
+        'storage_is_writable' => is_writable(storage_path()),
+    ]);
+});
+
+
 require __DIR__ . '/auth.php';
