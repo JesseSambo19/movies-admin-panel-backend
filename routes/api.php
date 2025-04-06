@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::middleware('auth:sanctum')->delete('/movies/{movie}', [MovieController::class, 'destroy']);
 
     // Route::resource('movies', MovieController::class);
+    Route::delete('/movies/delete-all', [MovieController::class, 'destroyAll']);
     Route::apiResource('movies', MovieController::class);
 
     // This route is protected with auth middleware

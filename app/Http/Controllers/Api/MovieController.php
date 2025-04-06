@@ -120,4 +120,19 @@ class MovieController extends Controller
 
         return response()->json(['message' => 'Movie deleted successfully']);
     }
+
+    // Delete all movies belonging to the authenticated user
+    public function destroyAll()
+    {
+        $user = Auth::user();
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
+        }
+
+        // Delete all movies owned by the authenticated user
+        $deleted = Movie::where('user_id', $user->id)->delete();
+
+        return response()->json(['message' => "$deleted movies deleted successfully"]);
+    }
 }
