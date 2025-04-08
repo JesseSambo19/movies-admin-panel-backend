@@ -15,7 +15,8 @@ class Cors
      */
     public function handle($request, Closure $next)
     {
-        header("Access-Control-Allow-Origin: http://localhost:3000, https://movies-admin-panel-hwc9.vercel.app/");
+        // header("Access-Control-Allow-Origin: http://localhost:3000");
+        header("Access-Control-Allow-Origin: https://movies-admin-panel-hwc9.vercel.app/");
         //ALLOW OPTIONS METHOD
         $headers = [
             'Access-Control-Allow-Methods' => 'POST,GET,OPTIONS,PUT,DELETE',
