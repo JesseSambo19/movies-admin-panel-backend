@@ -109,7 +109,7 @@ class AuthController extends Controller
                 'token' => $token,
                 'user' => $user, // Return user info (e.g., name)
                 'verified' => $verified,
-                'logged_in' => 1,
+                'logged_in' => '1',
             ]);
         }
 
@@ -122,7 +122,7 @@ class AuthController extends Controller
         // $user = User::where('email', $request->email)->first();
         $user = Auth::user(); // Get the authenticated user
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['verified' => false, 'message' => 'Your email is already verified. Please log in.'], 400);
+            return response()->json(['verified' => true, 'message' => 'Your email is already verified.'], 400);
         }
 
         if (!$user) {
@@ -138,7 +138,7 @@ class AuthController extends Controller
         // $user = User::where('email', $request->email)->first();
         $user = Auth::user(); // Get the authenticated user
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['verified' => false, 'message' => 'Your email is already verified. Please log in.'], 400);
+            return response()->json(['verified' => true, 'message' => 'Your email is already verified.'], 400);
         }
 
         if (!$user) {
@@ -160,7 +160,7 @@ class AuthController extends Controller
         $user->otp_expires_at = null;
         $user->save();
 
-        return response()->json(['message' => 'Email verified successfully', 'verified' => 1]);
+        return response()->json(['message' => 'Email verified successfully', 'verified' => '1']);
     }
 
     public function logout()
