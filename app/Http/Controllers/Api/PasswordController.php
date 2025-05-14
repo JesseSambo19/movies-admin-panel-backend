@@ -39,7 +39,7 @@ class PasswordController extends Controller
         );
 
         // 4. Build reset link
-        $resetLink = url("http://localhost:3000/reset-password/$token?email=" . urlencode($request->email));
+        $resetLink = url("https://movies-admin-panel-hwc9.vercel.app/reset-password/$token?email=" . urlencode($request->email));
 
         try {
             // 5. Send custom email
