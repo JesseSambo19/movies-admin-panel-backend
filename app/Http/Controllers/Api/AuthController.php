@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 // use Illuminate\Support\Facades\Log;
 // use Illuminate\Auth\Events\Registered;
 // use Illuminate\Foundation\Auth\EmailVerificationRequest;
+// use Carbon\Carbon; // For token expiration functionality
+
 
 class AuthController extends Controller
 {
@@ -216,6 +218,53 @@ class AuthController extends Controller
         // Return the response directly (since reset() already returns a response)
         return $response;
     }
+
+    //     public function handle($request, Closure $next)
+// {
+//     $token = $request->user()->token();
+//     if ($token->expires_at && $token->expires_at->isPast()) {
+//         return response()->json(['message' => 'Token expired'], 401);
+//     }
+//     return $next($request);
+// }
+
+
+    // login with token expiration
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|string|email',
+    //         'password' => 'required|string',
+    //     ]);
+
+    //     if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    //         $user = Auth::user();
+
+    //         // Create token
+    //         $tokenResult = $user->createToken('Movies');
+
+    //         // Set expiration (e.g., 1 hour from now)
+    //         $token = $tokenResult->accessToken;
+    //         $expiresAt = Carbon::now()->addHour();
+
+    //         // Save expiry in your database, e.g., create a column 'expires_at' in personal_access_tokens table
+    //         $tokenResult->token->expires_at = $expiresAt;
+    //         $tokenResult->token->save();
+
+    //         $verified = $user->hasVerifiedEmail();
+
+    //         return response()->json([
+    //             'message' => 'Logged in successfully!',
+    //             'token' => $tokenResult->plainTextToken,
+    //             'user' => $user,
+    //             'verified' => $verified,
+    //             'logged_in' => '1',
+    //             'expires_at' => $expiresAt->toDateTimeString(),
+    //         ]);
+    //     }
+
+    //     return response()->json(['message' => 'Invalid credentials'], 400);
+    // }
 
     // Original Forgot Password (Send Reset Link)
     // public function forgotPassword(Request $request)
