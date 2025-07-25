@@ -41,7 +41,13 @@ class ProfileController extends Controller
             'email' => $request->email,
         ]);
 
-        return response()->json(['message' => 'Profile updated successfully!']);
+        return response()->json([
+            'message' => 'Profile updated successfully!',
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+            ]
+        ]);
     }
 
     public function updatePassword(Request $request)
