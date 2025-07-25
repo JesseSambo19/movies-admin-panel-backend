@@ -14,6 +14,9 @@ class MovieController extends Controller
         // Get all movies
         // $movies = Movie::with('user:id,name')->orderBy('created_at', 'desc')->get(); // Fetch movies with user info
         $user = Auth::user(); // Get the authenticated user
+        //if (!$user) {
+        //  return response()->json(['error' => 'Unauthorized'], 401);
+        //}
         if (!$user->hasVerifiedEmail()) {
             return response()->json(['verified' => false, 'message' => 'Please verify your email.'], 400);
         }
